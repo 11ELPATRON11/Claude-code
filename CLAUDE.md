@@ -1,5 +1,22 @@
 # Ruflo — Claude Code Configuration
 
+## Token-Saving Agent Routing (highest priority)
+
+The main session plans and decides; delegate work to the cheapest agent that can do it:
+
+| Work type | Agent | Model |
+|-----------|-------|-------|
+| Find files/symbols, "where/how is X" | `scout` | haiku |
+| Run tests/builds/lint, install, mechanical edits | `runner` | haiku |
+| Implement features / fix bugs | `builder` | sonnet |
+| Review a non-trivial diff | `checker` | sonnet |
+| Architecture, tricky bugs, security decisions | main session | — |
+
+- Do it inline (no agent) when it is 1-2 tool calls: a known file read, a one-line edit, a quick command.
+- Give agents a precise, self-contained prompt (paths, goal, done-criteria) so they don't re-explore.
+- Run independent agents in parallel; never spawn an agent to redo work already in context.
+- Agents return short summaries, not file dumps. Prefer ruflo swarms only for 3+ file features.
+
 ## Rules
 
 - Do what has been asked; nothing more, nothing less
